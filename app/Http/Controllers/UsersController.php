@@ -11,19 +11,13 @@ class UsersController extends Controller
 {
     function index(Request $request)
     {
-    	if ($request->isJson()) {
     		$users = User::all();
-        	return response()->json($users,200);
-    	}
-        
-        return response()->json(['error'=> 'Unauthorized'],401,[]);
+        	return response()->json($user,200);
     }
 
     function createUser(Request $request)
     {
-    	if ($request->isJson()) {
-     			//	TODO: Create the user in the DB
-     		$data = $request->json()->all();
+     		$data = $request->all();
 
      		$user = User::create([
      			'name' => $data['name'],
@@ -33,18 +27,13 @@ class UsersController extends Controller
      			'api_token' => str_random(60)
      		]);	
         	return response()->json($user,201);
-    	}
-        
-        return response()->json([],401,[]);
     }
 
 
-    function getToken(Request $request)
+    function login(Request $request)
     {
-    	if ($request->isJson()) {
-     			//	TODO: Create the user in the DB
      		try {
-     			$data = $request->json()->all();
+     			$data = $request->all();
      			$user = User::where('username',$data['username'])->first();
 
      			if ($user && Hash::check($data['password'],$user->password)) {
@@ -58,6 +47,5 @@ class UsersController extends Controller
      		}
 
      		return response()->json(['error'=> 'Unauthorized'],401,[]);
-    	}
     }	
 }
